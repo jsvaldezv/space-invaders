@@ -1,0 +1,12 @@
+.DS_Store
+
+# CMake
+build/
+
+# IDEs
+xcode/
+Xcode/
+vs/
+vs22/
+Release/
+PreRelease/
