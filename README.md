@@ -1,6 +1,6 @@
-# C++ Project Template
+# Space Invaders
 
-C++ Project Template with CMake
+Space Invaders with C++ and CMake
 
 ## Pre-requisites
 
