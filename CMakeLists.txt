@@ -8,7 +8,7 @@ message(STATUS "Project Version: ${PROJECT_VERSION}")
 # ======================================= Project Configuration ======================================= #
 project(${PROJECT_NAME}
         VERSION ${PROJECT_VERSION}
-        DESCRIPTION "C++ Project Template"
+        DESCRIPTION "C++ Space Invaders Game"
         LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
@@ -29,6 +29,10 @@ add_executable(${PROJECT_NAME} Source/Main.cpp ${SOURCE_FILES})
 # C++ Version
 target_compile_features(${PROJECT_NAME} PRIVATE ${CPP_VERSION})
 
+# Find Raylib
+add_subdirectory(Libraries/raylib)
+target_link_libraries(${PROJECT_NAME} raylib)
+
 # Add files to compile 
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCE_FILES})
 set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "")
@@ -38,6 +42,14 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "" FILES ${SOURCE_FILES})
 
 # Add pre release debug flag
 target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<CONFIG:PreRelease>:PRE_RELEASE=1>)
+
+# ========================================= Libraries =========================================== #
+# Checks if OSX and links appropriate frameworks (only required on MacOS)
+if (APPLE)
+    target_link_libraries(${PROJECT_NAME} "-framework IOKit")
+    target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
+    target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
+endif()
 
 # ========================================= IDE env variables ========================================== #
 set(CMAKE_XCODE_SCHEME_ENVIRONMENT OS_ACTIVITY_MODE=disable)
