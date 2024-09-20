@@ -25,6 +25,8 @@ public:
 
 private:
     
+    void deleteInactiveLasers();
+    
     Spaceship spaceship;
     
 };

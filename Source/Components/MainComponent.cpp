@@ -1,4 +1,5 @@
 #include "MainComponent.h"
+#include "iostream"
 
 MainComponent::MainComponent()
 {
@@ -23,17 +24,22 @@ void MainComponent::process()
     while (!WindowShouldClose())
     {
         handleInput();
-
-        BeginDrawing();
+        update();
         draw();
-        EndDrawing();
     }
 }
 
 void MainComponent::draw()
 {
+    BeginDrawing();
+    
     drawBackground();
     spaceship.draw();
+    
+    for (auto& laser : spaceship.lasers)
+        laser.draw();
+    
+    EndDrawing();
 }
 
 void MainComponent::drawBackground()
@@ -43,7 +49,10 @@ void MainComponent::drawBackground()
 
 void MainComponent::update()
 {
+    for (auto& laser : spaceship.lasers)
+        laser.update();
     
+    deleteInactiveLasers();
 }
 
 void MainComponent::handleInput()
@@ -53,4 +62,18 @@ void MainComponent::handleInput()
     
     else if (IsKeyDown(KEY_RIGHT))
         spaceship.moveRight();
+    
+    else if (IsKeyDown(KEY_SPACE))
+        spaceship.fireLaser();
+}
+
+void MainComponent::deleteInactiveLasers()
+{
+    for (auto it = spaceship.lasers.begin(); it != spaceship.lasers.end();)
+    {
+        if (!it->active)
+            it = spaceship.lasers.erase (it);
+        else
+            ++it;
+    }
 }
