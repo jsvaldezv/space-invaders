@@ -1,33 +1,39 @@
 #include "Spaceship.h"
 
-Spaceship::Spaceship()
-{
-    image = LoadTexture ("Graphics/spaceship.png");
-    position.x = (GetScreenWidth() - image.width)/2;
-    position.y = GetScreenHeight() - image.height;
-}
-
 Spaceship::~Spaceship()
 {
     UnloadTexture (image);
 }
 
-void Spaceship::Draw()
+void Spaceship::prepare()
+{
+    image = LoadTexture ("../../Assets/spaceship.png");
+    position.x = (GetScreenWidth() - image.width)/2;
+    position.y = GetScreenHeight() - image.height;
+}
+
+void Spaceship::draw()
 {
     DrawTextureV (image, position, WHITE);
 }
 
-void Spaceship::MoveLeft()
+void Spaceship::moveLeft()
 {
+    position.x -= 7;
     
+    if (position.x < 0)
+        position.x = 0;
 }
 
-void Spaceship::MoveRight()
+void Spaceship::moveRight()
 {
+    position.x += 7;
     
+    if (position.x > GetScreenWidth() - image.width)
+        position.x = GetScreenWidth() - image.width;
 }
 
-void Spaceship::FireLaser()
+void Spaceship::fireLaser()
 {
     
 }

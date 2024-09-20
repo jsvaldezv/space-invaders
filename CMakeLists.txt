@@ -1,9 +1,23 @@
 # ======================================== Global Configuration ======================================= #
 cmake_minimum_required(VERSION 3.5)
 
+# Read version and plugin name and create variables
+file(READ "Config.cfg" CONFIG_CONTENT)
+
+# Using regular expressions to extract values without newline characters
+string(REGEX MATCH "PROJECT_NAME=([^\n]*)" _ ${CONFIG_CONTENT})
+set(PROJECT_NAME ${CMAKE_MATCH_1})
+
+string(REGEX MATCH "PROJECT_VERSION=([^\n]*)" _ ${CONFIG_CONTENT})
+set(PROJECT_VERSION ${CMAKE_MATCH_1})
+
+string(REGEX MATCH "CPP_VERSION=([^\n]*)" _ ${CONFIG_CONTENT})
+set(CPP_VERSION ${CMAKE_MATCH_1})
+
 # See general configuration values
 message(STATUS "Project Name: ${PROJECT_NAME}")
 message(STATUS "Project Version: ${PROJECT_VERSION}")
+message(STATUS "C++ Version: ${CPP_VERSION}")
 
 # ======================================= Project Configuration ======================================= #
 project(${PROJECT_NAME}
@@ -14,6 +28,7 @@ project(${PROJECT_NAME}
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 # Make C++ a hard requirement
+set(CPP_VERSION ${CPP_VERSION})
 set(CXX_STANDARD_REQUIRED ON)
 set(CMAKE_XCODE_GENERATE_SCHEME OFF)
 set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64")

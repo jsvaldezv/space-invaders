@@ -3,8 +3,6 @@
 MainComponent::MainComponent()
 {
     InitWindow (Sizes::WIDTH, Sizes::HEIGHT, "Space Invaders!");
-    SetTargetFPS (60);
-
     prepare();
     process();
 }
@@ -16,12 +14,16 @@ MainComponent::~MainComponent()
 
 void MainComponent::prepare()
 {
+    SetTargetFPS (60);
+    spaceship.prepare();
 }
 
 void MainComponent::process()
 {
     while (!WindowShouldClose())
     {
+        handleInput();
+
         BeginDrawing();
         draw();
         EndDrawing();
@@ -31,11 +33,24 @@ void MainComponent::process()
 void MainComponent::draw()
 {
     drawBackground();
-    
-    spaceship.Draw();
+    spaceship.draw();
 }
 
 void MainComponent::drawBackground()
 {
     ClearBackground (Colours::Grey);
+}
+
+void MainComponent::update()
+{
+    
+}
+
+void MainComponent::handleInput()
+{
+    if (IsKeyDown(KEY_LEFT))
+        spaceship.moveLeft();
+    
+    else if (IsKeyDown(KEY_RIGHT))
+        spaceship.moveRight();
 }

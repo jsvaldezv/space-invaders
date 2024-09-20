@@ -18,6 +18,10 @@ public:
     void draw();
 
     void drawBackground();
+    
+    void update();
+    
+    void handleInput();
 
 private:
     

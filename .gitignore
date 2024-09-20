@@ -10,3 +10,7 @@ vs/
 vs22/
 Release/
 PreRelease/
+
+# Clion
+cmake-build-debug/
+.idea

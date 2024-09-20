@@ -5,16 +5,18 @@ class Spaceship
 {
 public:
     
-    Spaceship();
+    Spaceship() = default;
     ~Spaceship();
     
-    void Draw();
+    void prepare();
+  
+    void draw();
     
-    void MoveLeft();
+    void moveLeft();
     
-    void MoveRight();
+    void moveRight();
     
-    void FireLaser();
+    void fireLaser();
     
 private:
     
