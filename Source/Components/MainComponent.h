@@ -1,6 +1,7 @@
 #pragma once
 #include "../Helpers/Colours.h"
 #include "../Helpers/Sizes.h"
+#include "Obstacle/Obstacle.h"
 #include "Spaceship/Spaceship.h"
 #include <iostream>
 #include <raylib.h>
@@ -28,5 +29,8 @@ private:
     void deleteInactiveLasers();
     
     Spaceship spaceship;
+    
+    std::vector<Obstacle> createObstacles();
+    std::vector<Obstacle> obstacles;
     
 };

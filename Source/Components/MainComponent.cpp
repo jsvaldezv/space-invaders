@@ -3,7 +3,7 @@
 
 MainComponent::MainComponent()
 {
-    InitWindow (Sizes::WIDTH, Sizes::HEIGHT, "Space Invaders!");
+    InitWindow (Sizes::WIDTH, Sizes::HEIGHT, "Space Invaders");
     prepare();
     process();
 }
@@ -17,6 +17,21 @@ void MainComponent::prepare()
 {
     SetTargetFPS (60);
     spaceship.prepare();
+    obstacles = createObstacles();
+}
+
+std::vector<Obstacle> MainComponent::createObstacles()
+{
+    int obstacleWidth = (int) (Obstacle::grid[0].size() * 3);
+    float gap = (GetScreenWidth() - (4 * obstacleWidth))/5;
+    
+    for (int i = 0; i < 4; i++)
+    {
+        float offset_x = (i + 1) * gap + i * obstacleWidth;
+        obstacles.push_back (Obstacle({offset_x, (float) (GetScreenHeight() - 100) }));
+    }
+    
+    return obstacles;
 }
 
 void MainComponent::process()
@@ -38,6 +53,9 @@ void MainComponent::draw()
     
     for (auto& laser : spaceship.lasers)
         laser.draw();
+    
+    for (auto& obstacle : obstacles)
+        obstacle.draw();
     
     EndDrawing();
 }
