@@ -24,6 +24,10 @@ void MainComponent::prepare()
     aliens = createAliens();
     aliensDirection = 1;
     timeLastAlienFired = 0;
+    
+    mysteryShip.prepare();
+    mysteryShipSpawnInterval = GetRandomValue (10, 20);
+    timeLastSpawn = 0.0f;
 }
 
 std::vector<Obstacle> MainComponent::createObstacles()
@@ -96,6 +100,8 @@ void MainComponent::draw()
     for (auto& laser : alienLasers)
         laser.draw();
     
+    mysteryShip.draw();
+    
     EndDrawing();
 }
 
@@ -150,6 +156,14 @@ void MainComponent::moveDownAliens (int distance)
 
 void MainComponent::update()
 {
+    double currentTime = GetTime();
+    if (currentTime - timeLastSpawn > mysteryShipSpawnInterval)
+    {
+        mysteryShip.spawn();
+        timeLastSpawn = GetTime();
+        mysteryShipSpawnInterval = GetRandomValue (10, 20);
+    }
+    
     for (auto& laser : spaceship.lasers)
         laser.update();
     
@@ -161,6 +175,8 @@ void MainComponent::update()
         laser.update();
     
     deleteInactiveLasers();
+    
+    mysteryShip.update();
 }
 
 void MainComponent::handleInput()

@@ -4,6 +4,7 @@
 #include "Obstacle/Obstacle.h"
 #include "Spaceship/Spaceship.h"
 #include "Alien/Alien.h"
+#include "MysteryShip/MysteryShip.h"
 #include <iostream>
 #include <raylib.h>
 
@@ -45,5 +46,9 @@ private:
     int aliensDirection;
     constexpr static float alienLaserShootInterval = 0.35f;
     float timeLastAlienFired;
+    
+    MysteryShip mysteryShip;
+    float mysteryShipSpawnInterval;
+    float timeLastSpawn;
     
 };
