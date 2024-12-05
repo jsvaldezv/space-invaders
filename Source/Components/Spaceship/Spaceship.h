@@ -20,6 +20,8 @@ public:
     
     void fireLaser();
     
+    Rectangle getRect();
+    
     std::vector<Laser> lasers;
     
 private:

@@ -25,6 +25,8 @@ public:
     void update();
     
     void handleInput();
+    
+    void checkForCollisions();
 
 private:
     

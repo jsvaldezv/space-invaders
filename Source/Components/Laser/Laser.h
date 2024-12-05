@@ -12,6 +12,8 @@ public:
     
     void draw();
     
+    Rectangle getRect();
+    
     bool active;
     
 private:

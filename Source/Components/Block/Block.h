@@ -9,6 +9,8 @@ public:
     
     void draw();
     
+    Rectangle getRect();
+    
 private:
     
     Vector2 position;

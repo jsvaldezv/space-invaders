@@ -16,6 +16,8 @@ public:
     
     void spawn();
     
+    Rectangle getRect();
+    
     bool alive;
     
 private:
