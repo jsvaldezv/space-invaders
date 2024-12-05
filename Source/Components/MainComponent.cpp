@@ -10,6 +10,7 @@ MainComponent::MainComponent()
 
 MainComponent::~MainComponent()
 {
+    Alien::unloadImages();
     CloseWindow();
 }
 
@@ -17,7 +18,12 @@ void MainComponent::prepare()
 {
     SetTargetFPS (60);
     spaceship.prepare();
+    
     obstacles = createObstacles();
+    
+    aliens = createAliens();
+    aliensDirection = 1;
+    timeLastAlienFired = 0;
 }
 
 std::vector<Obstacle> MainComponent::createObstacles()
@@ -32,6 +38,33 @@ std::vector<Obstacle> MainComponent::createObstacles()
     }
     
     return obstacles;
+}
+
+std::vector<Alien> MainComponent::createAliens()
+{
+    std::vector<Alien> aliens;
+    
+    for (int row = 0; row < 5; row++)
+    {
+        for (int column = 0; column < 11; column++)
+        {
+            int alienType;
+            
+            if (row == 0)
+                alienType = 3;
+            else if (row == 1 || row == 2)
+                alienType = 2;
+            else
+                alienType = 1;
+            
+            float x = 75 + column * 55;
+            float y = 110 + row * 55;
+            
+            aliens.push_back (Alien (alienType, { x, y }));
+        }
+    }
+    
+    return aliens;
 }
 
 void MainComponent::process()
@@ -57,6 +90,12 @@ void MainComponent::draw()
     for (auto& obstacle : obstacles)
         obstacle.draw();
     
+    for (auto& alien : aliens)
+        alien.draw();
+    
+    for (auto& laser : alienLasers)
+        laser.draw();
+    
     EndDrawing();
 }
 
@@ -65,9 +104,60 @@ void MainComponent::drawBackground()
     ClearBackground (Colours::Grey);
 }
 
+void MainComponent::moveAliens()
+{
+    for (auto& alien : aliens)
+    {
+        if (alien.position.x + alien.alienImages[alien.type - 1].width > GetScreenWidth())
+        {
+            aliensDirection = -1;
+            moveDownAliens (4);
+        }
+        
+        if (alien.position.x < 0)
+        {
+            aliensDirection = 1;
+            moveDownAliens (4);
+        }
+            
+        alien.update (aliensDirection);
+    }
+}
+
+void MainComponent::alienShootLaser()
+{
+    double currentTime = GetTime();
+    
+    if (currentTime - timeLastAlienFired >= alienLaserShootInterval && !aliens.empty())
+    {
+        int randomIndex = GetRandomValue (0, (int) (aliens.size() - 1));
+        Alien& alien = aliens[randomIndex];
+        
+        alienLasers.push_back (Laser ({ alien.position.x + alien.alienImages[alien.type - 1].width/2,
+                                        alien.position.y + alien.alienImages[alien.type - 1].height/2 }, 6));
+        
+        timeLastAlienFired = GetTime();
+    }
+}
+
+void MainComponent::moveDownAliens (int distance)
+{
+    for (auto& alien : aliens)
+    {
+        alien.position.y += distance;
+    }
+}
+
 void MainComponent::update()
 {
     for (auto& laser : spaceship.lasers)
+        laser.update();
+    
+    moveAliens();
+    
+    alienShootLaser();
+    
+    for (auto& laser : alienLasers)
         laser.update();
     
     deleteInactiveLasers();
@@ -91,6 +181,14 @@ void MainComponent::deleteInactiveLasers()
     {
         if (!it->active)
             it = spaceship.lasers.erase (it);
+        else
+            ++it;
+    }
+    
+    for (auto it = alienLasers.begin(); it != alienLasers.end();)
+    {
+        if (!it->active)
+            it = alienLasers.erase (it);
         else
             ++it;
     }
