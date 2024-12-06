@@ -1,8 +1,10 @@
-#include <iostream>
+#include "Components/MainComponent.h"
 
 int main()
 {
-    std::cout << "Hello World from C++ Project Template!\n";
+    std::cout << "Starting Space Invaders Game!...\n";
+
+    MainComponent mainComponent;
 
     return 0;
 }
