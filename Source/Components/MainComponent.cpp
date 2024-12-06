@@ -33,6 +33,8 @@ void MainComponent::prepare()
     lives = 3;
     run = true;
     SpaceshipImage = LoadTexture ("../../Assets/spaceship.png");
+    
+    score = 0;
 }
 
 std::vector<Obstacle> MainComponent::createObstacles()
@@ -127,6 +129,10 @@ void MainComponent::drawBackground()
         DrawTextureV (SpaceshipImage, { x, 745 }, WHITE);
         x += 50.0f;
     }
+    
+    DrawTextEx (Fonts::font, "SCORE", { 50, 15 }, 34, 2, Colours::Yellow);
+    std::string scoreText = FormatWithLeadingZeros (score, 5);
+    DrawTextEx (Fonts::font, scoreText.c_str(), { 50, 40 }, 34, 2, Colours::Yellow);
 }
 
 void MainComponent::moveAliens()
@@ -256,6 +262,15 @@ void MainComponent::checkForCollisions()
         {
             if (CheckCollisionRecs (it->getRect(), laser.getRect()))
             {
+                if (it -> type == 1)
+                    score += 100;
+                
+                if (it -> type == 2)
+                    score += 200;
+                
+                if (it -> type == 3)
+                    score += 300;
+                    
                 it = aliens.erase (it);
                 laser.active = false;
             }
@@ -283,6 +298,7 @@ void MainComponent::checkForCollisions()
         {
             mysteryShip.alive = false;
             laser.active = false;
+            score += 500;
         }
     }
     

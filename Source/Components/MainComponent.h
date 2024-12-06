@@ -7,6 +7,14 @@
 #include "MysteryShip/MysteryShip.h"
 #include <iostream>
 #include <raylib.h>
+#include <string>
+
+inline std::string FormatWithLeadingZeros (int number, int width)
+{
+    std::string numberText = std::to_string (number);
+    int leadingZeros = (int) (width - numberText.length());
+    return numberText = std::string (leadingZeros, '0') + numberText;
+}
 
 class MainComponent
 {
@@ -61,4 +69,6 @@ private:
     
     int lives;
     Texture2D SpaceshipImage;
+    
+    int score;
 };
