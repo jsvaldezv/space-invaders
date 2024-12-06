@@ -22,6 +22,8 @@ public:
     
     Rectangle getRect();
     
+    void reset();
+    
     std::vector<Laser> lasers;
     
 private:

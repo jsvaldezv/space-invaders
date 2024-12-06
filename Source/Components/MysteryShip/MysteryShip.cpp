@@ -27,7 +27,7 @@ void MysteryShip::update()
     {
         position.x += speed;
         
-        if (position.x > GetScreenWidth() - image.width || position.x < 0)
+        if (position.x > GetScreenWidth() - image.width - 25 || position.x < 25)
             alive = false;
     }
 }
@@ -44,7 +44,7 @@ void MysteryShip::spawn()
     }
     else
     {
-        position.x = GetScreenWidth() - image.width;
+        position.x = GetScreenWidth() - image.width - 25;
         speed = -3;
     }
     

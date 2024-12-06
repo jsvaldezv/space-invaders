@@ -3,7 +3,9 @@
 
 MainComponent::MainComponent()
 {
-    InitWindow (Sizes::WIDTH, Sizes::HEIGHT, "Space Invaders");
+    InitWindow (Sizes::WIDTH + Sizes::OFFSET, Sizes::HEIGHT + 2 * Sizes::OFFSET, "Space Invaders");
+    SetTargetFPS (60);
+    
     prepare();
     process();
 }
@@ -16,7 +18,6 @@ MainComponent::~MainComponent()
 
 void MainComponent::prepare()
 {
-    SetTargetFPS (60);
     spaceship.prepare();
     
     obstacles = createObstacles();
@@ -28,6 +29,10 @@ void MainComponent::prepare()
     mysteryShip.prepare();
     mysteryShipSpawnInterval = GetRandomValue (10, 20);
     timeLastSpawn = 0.0f;
+    
+    lives = 3;
+    run = true;
+    SpaceshipImage = LoadTexture ("../../Assets/spaceship.png");
 }
 
 std::vector<Obstacle> MainComponent::createObstacles()
@@ -38,7 +43,7 @@ std::vector<Obstacle> MainComponent::createObstacles()
     for (int i = 0; i < 4; i++)
     {
         float offset_x = (i + 1) * gap + i * obstacleWidth;
-        obstacles.push_back (Obstacle({offset_x, (float) (GetScreenHeight() - 100) }));
+        obstacles.push_back (Obstacle({offset_x, (float) (GetScreenHeight() - 200) }));
     }
     
     return obstacles;
@@ -108,19 +113,33 @@ void MainComponent::draw()
 void MainComponent::drawBackground()
 {
     ClearBackground (Colours::Grey);
+    DrawRectangleRoundedLinesEx ({ 10, 10, 780, 780 }, 0.18f, 20.0f, 2.0f, Colours::Yellow);
+    DrawLineEx ({ 25, 730 }, { 775, 730 }, 3, Colours::Yellow);
+    
+    if (run)
+        DrawTextEx (Fonts::font, "LEVEL 01", { 570, 740 }, 34, 2, Colours::Yellow);
+    else
+        DrawTextEx (Fonts::font, "GAME OVER", { 570, 740 }, 34, 2, Colours::Yellow);
+    
+    float x = 50.0f;
+    for (int i = 0; i < lives; i++)
+    {
+        DrawTextureV (SpaceshipImage, { x, 745 }, WHITE);
+        x += 50.0f;
+    }
 }
 
 void MainComponent::moveAliens()
 {
     for (auto& alien : aliens)
     {
-        if (alien.position.x + alien.alienImages[alien.type - 1].width > GetScreenWidth())
+        if (alien.position.x + alien.alienImages[alien.type - 1].width > GetScreenWidth() - 25)
         {
             aliensDirection = -1;
             moveDownAliens (4);
         }
         
-        if (alien.position.x < 0)
+        if (alien.position.x < 25)
         {
             aliensDirection = 1;
             moveDownAliens (4);
@@ -156,41 +175,55 @@ void MainComponent::moveDownAliens (int distance)
 
 void MainComponent::update()
 {
-    double currentTime = GetTime();
-    if (currentTime - timeLastSpawn > mysteryShipSpawnInterval)
+    if (run)
     {
-        mysteryShip.spawn();
-        timeLastSpawn = GetTime();
-        mysteryShipSpawnInterval = GetRandomValue (10, 20);
+        double currentTime = GetTime();
+        if (currentTime - timeLastSpawn > mysteryShipSpawnInterval)
+        {
+            mysteryShip.spawn();
+            timeLastSpawn = GetTime();
+            mysteryShipSpawnInterval = GetRandomValue (10, 20);
+        }
+        
+        for (auto& laser : spaceship.lasers)
+            laser.update();
+        
+        moveAliens();
+        
+        alienShootLaser();
+        
+        for (auto& laser : alienLasers)
+            laser.update();
+        
+        deleteInactiveLasers();
+        
+        mysteryShip.update();
+        
+        checkForCollisions();
     }
-    
-    for (auto& laser : spaceship.lasers)
-        laser.update();
-    
-    moveAliens();
-    
-    alienShootLaser();
-    
-    for (auto& laser : alienLasers)
-        laser.update();
-    
-    deleteInactiveLasers();
-    
-    mysteryShip.update();
-    
-    checkForCollisions();
+    else
+    {
+        if (IsKeyDown(KEY_ENTER))
+        {
+            reset();
+            prepare();
+        }
+    }
 }
 
 void MainComponent::handleInput()
 {
-    if (IsKeyDown(KEY_LEFT))
-        spaceship.moveLeft();
-    
-    else if (IsKeyDown(KEY_RIGHT))
-        spaceship.moveRight();
-    
-    else if (IsKeyDown(KEY_SPACE))
-        spaceship.fireLaser();
+    if (run)
+    {
+        if (IsKeyDown(KEY_LEFT))
+            spaceship.moveLeft();
+        
+        else if (IsKeyDown(KEY_RIGHT))
+            spaceship.moveRight();
+        
+        else if (IsKeyDown(KEY_SPACE))
+            spaceship.fireLaser();
+    }
 }
 
 void MainComponent::deleteInactiveLasers()
@@ -259,7 +292,10 @@ void MainComponent::checkForCollisions()
         if (CheckCollisionRecs (laser.getRect(), spaceship.getRect()))
         {
             laser.active = false;
-            std::cout << "Spaceship Hit" << std::endl;
+            lives--;
+            
+            if (lives == 0)
+                gameOver();
         }
         
         for (auto& obstacle : obstacles)
@@ -296,9 +332,22 @@ void MainComponent::checkForCollisions()
         }
         
         if (CheckCollisionRecs (alien.getRect(), spaceship.getRect()))
-        {
-            std::cout << "Spaceship hit by Alien" << std::endl;
-        }
+            gameOver();
     }
     
+}
+
+void MainComponent::gameOver()
+{
+    std::cout << "Game over" << std::endl;
+    run = false;
+}
+
+void MainComponent::reset()
+{
+    spaceship.reset();
+    
+    aliens.clear();
+    alienLasers.clear();
+    obstacles.clear();
 }

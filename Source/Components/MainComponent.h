@@ -1,5 +1,5 @@
 #pragma once
-#include "../Helpers/Colours.h"
+#include "../Helpers/Assets.h"
 #include "../Helpers/Sizes.h"
 #include "Obstacle/Obstacle.h"
 #include "Spaceship/Spaceship.h"
@@ -27,10 +27,16 @@ public:
     void handleInput();
     
     void checkForCollisions();
+    
+    bool run;
 
 private:
     
     void deleteInactiveLasers();
+    
+    void gameOver();
+    
+    void reset();
     
     Spaceship spaceship;
     
@@ -53,4 +59,6 @@ private:
     float mysteryShipSpawnInterval;
     float timeLastSpawn;
     
+    int lives;
+    Texture2D SpaceshipImage;
 };
