@@ -35,6 +35,7 @@ void MainComponent::prepare()
     SpaceshipImage = LoadTexture ("../../Assets/spaceship.png");
     
     score = 0;
+    highScore = 0;
 }
 
 std::vector<Obstacle> MainComponent::createObstacles()
@@ -130,9 +131,13 @@ void MainComponent::drawBackground()
         x += 50.0f;
     }
     
-    DrawTextEx (Fonts::font, "SCORE", { 50, 15 }, 34, 2, Colours::Yellow);
+    DrawTextEx (Fonts::font, "SCORE", { 60, 25 }, 34, 2, Colours::Yellow);
     std::string scoreText = FormatWithLeadingZeros (score, 5);
-    DrawTextEx (Fonts::font, scoreText.c_str(), { 50, 40 }, 34, 2, Colours::Yellow);
+    DrawTextEx (Fonts::font, scoreText.c_str(), { 60, 50 }, 34, 2, Colours::Yellow);
+    
+    DrawTextEx (Fonts::font, "HIGH SCORE", { 540, 25 }, 34, 2, Colours::Yellow);
+    std::string highScoreText = FormatWithLeadingZeros (highScore, 5);
+    DrawTextEx (Fonts::font, highScoreText.c_str(), { 625, 50 }, 34, 2, Colours::Yellow);
 }
 
 void MainComponent::moveAliens()
@@ -271,6 +276,7 @@ void MainComponent::checkForCollisions()
                 if (it -> type == 3)
                     score += 300;
                     
+                checkForHighScore();
                 it = aliens.erase (it);
                 laser.active = false;
             }
@@ -299,6 +305,7 @@ void MainComponent::checkForCollisions()
             mysteryShip.alive = false;
             laser.active = false;
             score += 500;
+            checkForHighScore();
         }
     }
     
@@ -366,4 +373,12 @@ void MainComponent::reset()
     aliens.clear();
     alienLasers.clear();
     obstacles.clear();
+}
+
+void MainComponent::checkForHighScore()
+{
+    if (score > highScore)
+    {
+        highScore = score;
+    }
 }

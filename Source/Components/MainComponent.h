@@ -71,4 +71,6 @@ private:
     Texture2D SpaceshipImage;
     
     int score;
+    int highScore;
+    void checkForHighScore();
 };
