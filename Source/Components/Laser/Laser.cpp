@@ -5,14 +5,14 @@ Laser::Laser (Vector2 position, int speed)
 {
     this->position = position;
     this->speed = speed;
-    
+
     active = true;
 }
 
 void Laser::update()
 {
     position.y += speed;
-    
+
     if (active)
     {
         if (position.y > GetScreenHeight() - 100 || position.y < 25)
@@ -36,7 +36,6 @@ Rectangle Laser::getRect()
     rect.y = position.y;
     rect.width = 4;
     rect.height = 15;
-    
+
     return rect;
 }
-

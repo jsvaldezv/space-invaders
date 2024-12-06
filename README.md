@@ -2,6 +2,8 @@
 
 Space Invaders with C++ and CMake
 
+https://github.com/user-attachments/assets/e1f8f65e-2659-44a8-a922-8faf94de8aed
+
 ## Pre-requisites
 
 ### CMake

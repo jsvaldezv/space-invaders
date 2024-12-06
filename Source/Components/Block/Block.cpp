@@ -17,6 +17,6 @@ Rectangle Block::getRect()
     rect.y = position.y;
     rect.width = 3;
     rect.height = 3;
-    
+
     return rect;
 }
