@@ -1,8 +1,18 @@
 # Space Invaders
 
-Space Invaders with C++ and CMake
-
 https://github.com/user-attachments/assets/e1f8f65e-2659-44a8-a922-8faf94de8aed
+
+This project is a modern take on the classic Space Invaders arcade game, built from scratch in C++ using the raylib graphics library. The build process is managed with CMake, ensuring portability and ease of compilation across platforms.
+
+The game features:
+
+- Core mechanics faithfully inspired by the original Space Invaders
+- Clean and modular C++ code structure
+- Real-time rendering and input handling via raylib
+- Basic sound effects and sprite-based visuals
+- Cross-platform build system using CMake
+
+This project serves as a fun exploration of game development fundamentals, graphics rendering, and system architecture using modern C++ practices.
 
 ## Pre-requisites
 
